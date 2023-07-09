@@ -1,0 +1,61 @@
+.
+├── Dockerfile
+├── app
+│   ├── --init--.py
+│   ├── models
+│   │   ├── --init--.py
+│   │   └── variant_summary:postgresql
+│   │       ├── process_upload_pgresql.py
+│   │       └── table_pgresql.py
+│   ├── services
+│   │   ├── --init--.py
+│   │   ├── dao.py
+│   │   ├── data_visualizer.py
+│   │   ├── file_reader.py
+│   │   ├── pdf_generator.py
+│   │   ├── report_generator.py
+│   │   └── summary_generator.py
+│   ├── static
+│   │   ├── back.png
+│   │   ├── help.png
+│   │   ├── home.png
+│   │   ├── icons
+│   │   │   ├── forward.png
+│   │   │   ├── rectangle.portrait.and.arrow.right.fill@2x.png
+│   │   │   ├── search.png
+│   │   │   ├── square.and.arrow.down.fill@2x.png
+│   │   │   ├── square.and.arrow.up.circle.fill@2x.png
+│   │   │   ├── trash.fill@2x.png
+│   │   │   └── trash@2x.png
+│   │   ├── logo.png
+│   │   ├── profile.png
+│   │   ├── scripts.js
+│   │   ├── settings.png
+│   │   ├── styles.css
+│   │   ├── terms.png
+│   │   └── usage.png
+│   ├── templates
+│   │   ├── auth.html
+│   │   ├── home_screen.html
+│   │   └── results.html
+│   ├── tests
+│   │   ├── --init--.py
+│   │   ├── test_dna_analysis.py
+│   │   └── test_report_generator.py
+│   ├── utils
+│   │   ├── --init--.py
+│   │   ├── bioutils.py
+│   │   ├── ensemblutils.py
+│   │   ├── ncbiutils.py
+│   │   └── wolfram_api.py
+│   └── views
+│       ├── --init--.py
+│       └── main.py
+├── config.py
+├── project_structure.txt
+├── requirements.txt
+├── run.py
+└── target
+    └── pylist.json
+
+12 directories, 47 files

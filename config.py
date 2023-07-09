@@ -1,0 +1,49 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+class Config(object):
+    # PostgreSQL
+    POSTGRES_URL = os.getenv("POSTGRES_URL")
+    POSTGRES_USER = os.getenv("POSTGRES_USER")
+    POSTGRES_PW = os.getenv("POSTGRES_PW") 
+    POSTGRES_DB = os.getenv("POSTGRES_DB")
+    SQLALCHEMY_DATABASE_URI = f'postgresql://{POSTGRES_USER}:{POSTGRES_PW}@{POSTGRES_URL}/{POSTGRES_DB}'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    # FirebaseAdminConfiguration
+    FIREBASE_TYPE = os.getenv("FIREBASE_TYPE")
+    FIREBASE_PROJECT_ID = os.getenv("FIREBASE_PROJECT_ID")
+    FIREBASE_PRIVATE_KEY_ID = os.getenv("FIREBASE_PRIVATE_KEY_ID")
+    FIREBASE_PRIVATE_KEY = os.getenv("FIREBASE_PRIVATE_KEY")
+    FIREBASE_CLIENT_EMAIL = os.getenv("FIREBASE_CLIENT_EMAIL")
+    FIREBASE_CLIENT_ID = os.getenv("FIREBASE_CLIENT_ID")
+    FIREBASE_AUTH_URI = os.getenv("FIREBASE_AUTH_URI")
+    FIREBASE_TOKEN_URI = os.getenv("FIREBASE_TOKEN_URI")
+    FIREBASE_AUTH_PROVIDER_X509_CERT_URL = os.getenv("FIREBASE_AUTH_PROVIDER_X509_CERT_URL")
+    FIREBASE_CLIENT_X509_CERT_URL = os.getenv("FIREBASE_CLIENT_X509_CERT_URL")
+
+    #FirebaseUI
+    FIREBASE_API_KEY = os.getenv("FIREBASE_API_KEY")
+    FIREBASE_AUTH_DOMAIN = os.getenv("FIREBASE_AUTH_DOMAIN")
+    FIREBASE_PROJECT_ID = os.getenv("FIREBASE_PROJECT_ID")
+    FIREBASE_STORAGE_BUCKET = os.getenv("FIREBASE_STORAGE_BUCKET")
+    FIREBASE_MESSAGING_SENDER_ID = os.getenv("FIREBASE_MESSAGING_SENDER_ID")
+    FIREBASE_APP_ID = os.getenv("FIREBASE_APP_ID ")
+
+    # OpenAI
+    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+    # NCBI
+    NCBI_API_KEY = os.getenv("NCBI_API_KEY")
+    NCBI_API_EMAIL = os.getenv("NCBI_API_EMAIL")
+
+    # Redis
+    REDIS_HOST = os.getenv("REDIS_HOST")
+    REDIS_PORT = os.getenv("REDIS_PORT")
+    REDIS_DB = os.getenv("REDIS_DB")
+
+    # Wolfram
+    WOLFRAM_APP_NAME = os.getenv("WOLFRAM_APP_NAME")
+    WOLFRAM_APP_ID = os.getenv("WOLFRAM_APP_ID")

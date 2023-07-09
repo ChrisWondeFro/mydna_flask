@@ -1,0 +1,46 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MyDNA Analysis Tool</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+
+</head>
+<body>
+    <header>
+        <a href="#"><img src="{{ url_for('static', filename='logo.png') }}" alt="Icon"></a>
+    </header>
+    <div class="main-container">
+        <form action="{{ url_for('dna.home') }}" method="post" enctype="multipart/form-data">
+        <h1>Welcome to MyDNA Analysis Tool!</h1>
+        <p>Your personal DNA analysis is now just a few clicks away.</p>
+       <div class="form-group">
+            <label for="dna_sequence">Upload your DNA file:</label><br>
+            <input type="file" id="dna_sequence" name="dna_sequence" accept=".txt" class="form-control"><br>
+        </div>
+        <div class="form-group">
+            <label for="rna_seq_data">Upload your RNA-seq data file (optional):</label><br>
+            <input type="file" id="rna_seq_data" name="rna_seq_data" accept=".txt" class="form-control"><br>
+        </div>
+        <div class="form-group">
+            <label>Select the analysis you would like to use:</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" name="genes"> Personalized Health Risk Assessment</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Start Analysis" class="submit-btn">
+        </div>
+         </form>
+    </div>
+    <nav class="bottom-nav">
+        <a href="#"><img src="{{ url_for('static', filename='home.png') }}" alt="Icon"></a>
+        <a href="#"><img src="{{ url_for('static', filename='profile.png') }}" alt="Icon"></a>
+        <a href="#"><img src="{{ url_for('static', filename='settings.png') }}" alt="Icon"></a>
+        <a href="#"><img src="{{ url_for('static', filename='usage.png') }}" alt="Icon"></a>
+        <a href="#"><img src="{{ url_for('static', filename='help.png') }}" alt="Icon"></a>
+        <a href="#"><img src="{{ url_for('static', filename='terms.png') }}" alt="Icon"></a>
+    </nav>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+</body>
+</html>

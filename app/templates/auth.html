@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MyDNA Analysis Tool</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+
+    <!-- Add Firebase and FirebaseUI script tags -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
+</head>
+<body>
+    <header>
+        <a href="#"><img src="{{ url_for('static', filename='logo.png') }}" alt="Icon"></a>
+    </header>
+        <h1>MyDNA</h1>
+        <p class="sign-up-notice">Sign Up or Log In to start using MyDNA!</p>
+    <div class="main-container">
+        <!-- Add a div to show the FirebaseUI Auth interface -->
+        <div id="firebaseui-auth-container"></div>
+    </div>
+    <footer>
+        <nav class="bottom-nav">
+         <a href="#">About MyDNA</a>
+         <a href="#">Contact Us</a>
+        </nav>
+    </footer>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+</body>
+</html>
