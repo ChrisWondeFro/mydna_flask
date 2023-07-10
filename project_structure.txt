@@ -1,14 +1,29 @@
 .
 ├── Dockerfile
+├── README.md
+├── __pycache__
+│   └── config.cpython-311.pyc
 ├── app
-│   ├── --init--.py
+│   ├── __init__.py
+│   ├── __pycache__
+│   │   └── __init__.cpython-311.pyc
 │   ├── models
-│   │   ├── --init--.py
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   └── __init__.cpython-311.pyc
 │   │   └── variant_summary:postgresql
 │   │       ├── process_upload_pgresql.py
 │   │       └── table_pgresql.py
 │   ├── services
-│   │   ├── --init--.py
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-311.pyc
+│   │   │   ├── dao.cpython-311.pyc
+│   │   │   ├── data_visualizer.cpython-311.pyc
+│   │   │   ├── file_reader.cpython-311.pyc
+│   │   │   ├── pdf_generator.cpython-311.pyc
+│   │   │   ├── report_generator.cpython-311.pyc
+│   │   │   └── summary_generator.cpython-311.pyc
 │   │   ├── dao.py
 │   │   ├── data_visualizer.py
 │   │   ├── file_reader.py
@@ -17,6 +32,7 @@
 │   │   └── summary_generator.py
 │   ├── static
 │   │   ├── back.png
+│   │   ├── clinical_significance_distribution.png
 │   │   ├── help.png
 │   │   ├── home.png
 │   │   ├── icons
@@ -37,25 +53,36 @@
 │   ├── templates
 │   │   ├── auth.html
 │   │   ├── home_screen.html
-│   │   └── results.html
+│   │   ├── results.html
+│   │   └── summary_template.html
 │   ├── tests
-│   │   ├── --init--.py
+│   │   ├── __init__.py
 │   │   ├── test_dna_analysis.py
 │   │   └── test_report_generator.py
 │   ├── utils
-│   │   ├── --init--.py
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-311.pyc
+│   │   │   ├── ensemblutils.cpython-311.pyc
+│   │   │   ├── ncbiutils.cpython-311.pyc
+│   │   │   └── wolfram_api.cpython-311.pyc
 │   │   ├── bioutils.py
 │   │   ├── ensemblutils.py
 │   │   ├── ncbiutils.py
 │   │   └── wolfram_api.py
 │   └── views
-│       ├── --init--.py
+│       ├── __init__.py
+│       ├── __pycache__
+│       │   ├── __init__.cpython-311.pyc
+│       │   └── main.cpython-311.pyc
 │       └── main.py
 ├── config.py
 ├── project_structure.txt
 ├── requirements.txt
 ├── run.py
-└── target
-    └── pylist.json
+├── run_flask.py
+├── target
+│   └── pylist.json
+└── zip.py
 
-12 directories, 47 files
+18 directories, 68 files

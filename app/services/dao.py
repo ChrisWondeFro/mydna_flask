@@ -32,7 +32,7 @@ class VariantDAO:
                 )
             )
 
-            result = db.execute(stmt)
+            result = db.session.execute(stmt)
             rows.extend(result.fetchall())
 
         variant_infos = [row._asdict() for row in rows]

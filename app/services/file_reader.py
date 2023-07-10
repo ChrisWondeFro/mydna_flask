@@ -27,15 +27,14 @@ def read_and_validate_data(file_path):
          # Fill missing values with 'N'
         df.fillna('N', inplace=True)
 
-         # Check if 'genotype' column exists and split it into 'allele1' and 'allele2' if it does
         if 'genotype' in df.columns:
         # Ensure genotype is exactly two characters long
             invalid_genotypes = df[df['genotype'].str.len() != 2]['genotype'].unique()
             if invalid_genotypes.size > 0:
-               raise ValueError(f"Invalid genotype(s): {', '.join(invalid_genotypes)}")
+                raise ValueError(f"Invalid genotype(s): {', '.join(invalid_genotypes)}")
 
-        df[['allele1', 'allele2']] = df['genotype'].apply(lambda x: pd.Series(list(x)))
-        df.drop(columns=['genotype'], inplace=True)
+            df[['allele1', 'allele2']] = df['genotype'].apply(lambda x: pd.Series(list(x)))
+            df.drop(columns=['genotype'], inplace=True)
 
         # Check for required columns
         required_cols = {'rsid', 'chromosome', 'position', 'allele1', 'allele2'}

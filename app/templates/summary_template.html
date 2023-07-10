@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* Your CSS styles go here */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            color: rgb(23, 80, 154);
+        }
+        p, table {
+            color: black;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 5px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Personalized DNA Health Assessment Report</h1>
+    <p>This report is based on the analysis of your raw DNA data. It provides insights into genetic variations and their potential health impacts.</p>
+    <h2>Summary</h2>
+    <p>A total of {{ variant_info|length }} variants were analyzed.</p>
+    {% for significance, count in clinical_significance_counts.items() %}
+    <p>{{ count }} variants were found to be {{ significance }}.</p>
+    {% endfor %}
+    {% for variant in variant_info %}
+    <h2>Variant: {{ variant["rs_dbsnp"] }} </h2>
+    <p>Clinical Significance: {{ variant['clinicalsignificance'] }}</p>
+    <p>Last Evaluated: {{ variant['lastevaluated'] }}</p>
+    <p>Review Status: {{ variant['reviewstatus'] }}</p>
+    <p>PhenotypeList: {{ variant['phenotypelist'] }}</p>
+    <p>PhenotypeIDS:</p>
+    <ul>
+    {% for id in variant['phenotypeids'].split(',') %}
+    <li><a href='https://www.ncbi.nlm.nih.gov/snp/{{ id.strip() }}'>{{ id }}</a></li>
+    {% endfor %}
+    </ul>
+    {% endfor %}
+    <img src="{{ url_for('static', filename='clinical_significance_distribution.png') }}" alt="Clinical Significance Distribution">
+    
+</body>
+</html>

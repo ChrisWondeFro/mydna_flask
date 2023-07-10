@@ -13,10 +13,9 @@ import asyncio
 import os
 
 from app.services.report_generator import DNAReportGenerator 
-from app.services.file_reader import read_and_validate_data
 from config import Config
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='', static_folder='app/static')
 Compress(app)
 
 config = Config()
@@ -53,30 +52,43 @@ def handle_unauthorized(e):
 def auth():
     return render_template('auth.html')
 
+@dna_bp.route('/results')
+async def results():
+    
+    report_generator = DNAReportGenerator(config.SQLALCHEMY_DATABASE_URI)
+
+    summary_html, clinical_significance_counts = await report_generator.generate_report()
+
+    return render_template('results.html', summary_html=summary_html, clinical_significance_counts=clinical_significance_counts)
+
 @dna_bp.route('/home', methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
-        if 'file' not in request.files:
+        if 'dna_sequence' not in request.files:
             raise BadRequest("No file part in the request.")
         
+        file = request.files['dna_sequence']
         if file.filename == '':
-              return "No file selected for uploading."
-         
-        file = request.files['file']
-        file = f"/tmp/dna_file{os.path.splitext(file.filename)[1]}"
-
+            return "No file selected for uploading."
+        
         filename = secure_filename(file.filename)
-        file.save(filename)
-        filename = read_and_validate_data(file)
+        file_path =(os.path.join('/tmp', filename))
+        file.save(file_path)
+
+        report_generator = DNAReportGenerator(config.SQLALCHEMY_DATABASE_URI)
 
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
-        report = loop.run_until_complete(report_generator.read_and_validate(secure_filename))
+        summary_html, clinical_significance_counts = loop.run_until_complete(report_generator.generate_report(file_path))
 
-        return render_template('results.html', report=report)
+        return render_template('results.html', summary_html=summary_html, clinical_significance_counts=clinical_significance_counts)
 
     return render_template('home_screen.html')
 
+@dna_bp.route('/download_pdf')
+def download_pdf():
+    path_to_pdf = 'path_to_your_pdf/DNA_Health_Assessment_Report.pdf'
+    return send_file(path_to_pdf, as_attachment=True)
 
 if __name__ == '__main__':
     from hypercorn.config import Config
