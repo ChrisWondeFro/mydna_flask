@@ -2,10 +2,9 @@ flask==2.3.2
 pandas==2.0.3
 sqlalchemy==2.0.18
 numpy==1.25.0
-weasyprint==59.0
+reportlab==4.0.4
 python-dotenv==0.19.0
 gunicorn==20.1.0
-redis==7.0.11
 asyncio==3.4.3
 bio==1.25.0
 aredis==1.1.8

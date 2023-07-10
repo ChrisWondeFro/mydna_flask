@@ -14,6 +14,7 @@ import os
 
 from app.services.report_generator import DNAReportGenerator 
 from config import Config
+from datetime import datetime
 
 app = Flask(__name__, static_url_path='', static_folder='app/static')
 Compress(app)
@@ -75,11 +76,13 @@ def home():
         file_path =(os.path.join('/tmp', filename))
         file.save(file_path)
 
+        image_url = url_for('static', filename='clinical_significance_distribution.png')
+
         report_generator = DNAReportGenerator(config.SQLALCHEMY_DATABASE_URI)
 
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
-        summary_html, clinical_significance_counts = loop.run_until_complete(report_generator.generate_report(file_path))
+        summary_html, clinical_significance_counts = loop.run_until_complete(report_generator.generate_report(file_path, image_url))
 
         return render_template('results.html', summary_html=summary_html, clinical_significance_counts=clinical_significance_counts)
 
@@ -87,7 +90,11 @@ def home():
 
 @dna_bp.route('/download_pdf')
 def download_pdf():
-    path_to_pdf = 'path_to_your_pdf/DNA_Health_Assessment_Report.pdf'
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    filename = f'DNA_Health_Assessment_Report_{timestamp}.pdf'
+    path_to_pdf = f'../{filename}'
     return send_file(path_to_pdf, as_attachment=True)
 
 if __name__ == '__main__':
