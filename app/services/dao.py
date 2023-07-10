@@ -20,9 +20,14 @@ class VariantDAO:
                 variant_summary_table.c.rs_dbsnp,
                 variant_summary_table.c.assembly,
                 variant_summary_table.c.clinicalsignificance,
+                variant_summary_table.c.type,
                 variant_summary_table.c.lastevaluated,
                 variant_summary_table.c.reviewstatus,
+                variant_summary_table.c.numbersubmitters,
                 variant_summary_table.c.phenotypelist,
+                variant_summary_table.c.hgncid,
+                variant_summary_table.c.geneid,
+                variant_summary_table.c.genesymbol,
                 variant_summary_table.c.phenotypeids,
             ).where(
                 and_(
