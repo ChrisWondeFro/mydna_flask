@@ -7,7 +7,7 @@
             font-family: Arial, sans-serif;
         }
         h1 {
-            color: rgb(23, 80, 154);
+            color: rgb(22, 73, 139);
         }
         p, table {
             color: black;
@@ -39,14 +39,24 @@
     <p>PhenotypeList: {{ variant['phenotypelist'] }}</p>
     <p>PhenotypeIDS:</p>
     <ul>
-    {% for id_type, id_value in variant['phenotypeids'] %}
-    <li>
-        <a href='http://www.ncbi.nlm.nih.gov/clinvar/{{ id_type }}{{ id_value }}'>{{ id_value }}</a>
-    </li>
-    {% endfor %}
+        {% for id_type, id in variant['phenotypeids'] %}
+        {% set url = 'https://www.ncbi.nlm.nih.gov/clinvar/' %}
+        {% if id_type == 'Condition Count' %}
+            <li>{{ id }} conditions reported</li>
+        {% else %}
+            {% if id_type == 'MedGen' %}
+                {% set url = url ~ '?term=' ~ id ~ '[cui]' %}
+            {% elif id_type == 'OMIM' %}
+                {% set url = url ~ '?term=' ~ id ~ '[mim]' %}
+            {% elif id_type == 'Orphanet' %}
+                {% set url = url ~ '?term=' ~ id ~ '[orpha]' %}
+            <!-- add more conditions here based on possible ID types -->
+            {% endif %}
+            <li><a href="{{ url }}">{{ id_type }}: {{ id }}</a></li>
+        {% endif %}
+        {% endfor %}
     </ul>
     {% endfor %}
     <img src="{{ image_url }}" alt="Clinical Significance Distribution">
-  
 </body>
 </html>
