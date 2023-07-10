@@ -13,8 +13,8 @@ import asyncio
 import os
 
 from app.services.report_generator import DNAReportGenerator 
+from app.services.pdf_generator import PDFGenerator
 from config import Config
-from datetime import datetime
 
 app = Flask(__name__, static_url_path='', static_folder='app/static')
 Compress(app)
@@ -90,12 +90,11 @@ def home():
 
 @dna_bp.route('/download_pdf')
 def download_pdf():
+    # Check if a report has been generated
+    if PDFGenerator.last_report_filename is None:
+        return "No report has been generated yet.", 404
 
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    filename = f'DNA_Health_Assessment_Report_{timestamp}.pdf'
-    path_to_pdf = f'../{filename}'
-    return send_file(path_to_pdf, as_attachment=True)
+    return send_file(PDFGenerator.last_report_filename, as_attachment=True)
 
 if __name__ == '__main__':
     from hypercorn.config import Config
