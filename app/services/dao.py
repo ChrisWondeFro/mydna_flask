@@ -25,8 +25,7 @@ class VariantDAO:
                 variant_summary_table.c.reviewstatus,
                 variant_summary_table.c.numbersubmitters,
                 variant_summary_table.c.phenotypelist,
-                variant_summary_table.c.hgncid,
-                variant_summary_table.c.geneid,
+                variant_summary_table.c.hgnc_id,
                 variant_summary_table.c.genesymbol,
                 variant_summary_table.c.phenotypeids,
             ).where(

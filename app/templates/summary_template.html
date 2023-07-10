@@ -39,8 +39,10 @@
     <p>PhenotypeList: {{ variant['phenotypelist'] }}</p>
     <p>PhenotypeIDS:</p>
     <ul>
-    {% for id in variant['phenotypeids'].split(',') %}
-    <li><a href='https://www.ncbi.nlm.nih.gov/snp/{{ id.strip() }}'>{{ id }}</a></li>
+    {% for id_type, id_value in variant['phenotypeids'] %}
+    <li>
+        <a href='http://www.ncbi.nlm.nih.gov/clinvar/{{ id_type }}{{ id_value }}'>{{ id_value }}</a>
+    </li>
     {% endfor %}
     </ul>
     {% endfor %}
