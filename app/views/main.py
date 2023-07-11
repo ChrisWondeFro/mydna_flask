@@ -90,7 +90,6 @@ def home():
 
 @dna_bp.route('/download_pdf')
 def download_pdf():
-    # Check if a report has been generated
     if PDFGenerator.last_report_filename is None:
         return "No report has been generated yet.", 404
 

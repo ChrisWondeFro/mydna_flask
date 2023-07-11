@@ -1,62 +1,79 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <!-- Add Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <style>
-        /* Your CSS styles go here */
+        /* Add custom CSS styles */
         body {
             font-family: Arial, sans-serif;
         }
         h1 {
-            color: rgb(22, 73, 139);
+            color: rgb(22, 65, 121);
         }
         p, table {
             color: black;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .collapsible {
+            cursor: pointer;
+            transition: background-color 0.2s;
         }
-        th, td {
-            border: 1px solid black;
-            padding: 5px;
-            text-align: left;
+        .collapsible:hover {
+            background-color: #f1f1f1;
         }
     </style>
 </head>
 <body>
-    <h1>Personalized DNA Health Assessment Report</h1>
-    <p>This report is based on the analysis of your raw DNA data. It provides insights into genetic variations and their potential health impacts.</p>
-    <h2>Summary</h2>
-    <p>A total of {{ variant_info|length }} variants were analyzed.</p>
-    {% for significance, count in clinical_significance_counts.items() %}
-    <p>{{ count }} variants were found to be {{ significance }}.</p>
-    {% endfor %}
-    {% for variant in variant_info %}
-    <h2>Variant: {{ variant["rs_dbsnp"] }} </h2>
-    <p>Clinical Significance: {{ variant['clinicalsignificance'] }}</p>
-    <p>Last Evaluated: {{ variant['lastevaluated'] }}</p>
-    <p>Review Status: {{ variant['reviewstatus'] }}</p>
-    <p>PhenotypeList: {{ variant['phenotypelist'] }}</p>
-    <p>PhenotypeIDS:</p>
-    <ul>
-        {% for id_type, id in variant['phenotypeids'] %}
-        {% set url = 'https://www.ncbi.nlm.nih.gov/clinvar/' %}
-        {% if id_type == 'Condition Count' %}
-            <li>{{ id }} conditions reported</li>
-        {% else %}
-            {% if id_type == 'MedGen' %}
-                {% set url = url ~ '?term=' ~ id ~ '[cui]' %}
-            {% elif id_type == 'OMIM' %}
-                {% set url = url ~ '?term=' ~ id ~ '[mim]' %}
-            {% elif id_type == 'Orphanet' %}
-                {% set url = url ~ '?term=' ~ id ~ '[orpha]' %}
-            <!-- add more conditions here based on possible ID types -->
-            {% endif %}
-            <li><a href="{{ url }}">{{ id_type }}: {{ id }}</a></li>
-        {% endif %}
+    <div class="container">
+        <h1 class="my-4">Personalized DNA Health Assessment Report</h1>
+        <p>This report is based on the analysis of your raw DNA data. It provides insights into genetic variations and their potential health impacts.</p>
+        <h2 class="my-4">Summary</h2>
+        <p>A total of {{ clinical_significances|length }} variants were analyzed.</p>
+        {% for significance, types in clinical_significances.items() %}
+            <div class="my-4">
+                <h3>{{ significance }}</h3>
+                {% for type, variants in types.items() %}
+                    <div class="my-3">
+                        <h4>{{ type }}</h4>
+                        {% for variant in variants %}
+                            <div class="variant mb-2">
+                                <button type="button" class="collapsible btn btn-outline-primary btn-block">{{ variant["rs_dbsnp"] }}</button>
+                                <!-- Updated code -->
+                                <div class="content mt-2" style="display: none;">
+                                    <h2>Variant: {{ variant["rs_dbsnp"] }} </h2>
+                                    <p>Clinical Significance: {{ variant['clinicalsignificance'] }}</p>
+                                    <p>Last Evaluated: {{ variant['lastevaluated'] }}</p>
+                                    <p>Review Status: {{ variant['reviewstatus'] }}</p>
+                                    <p>PhenotypeList: {{ variant['phenotypelist'] }}</p>
+                                    <p>PhenotypeIDS:</p>
+                                    <ul>
+                                        {% for id_type, id in variant['phenotypeids'] %}
+                                        {% set url = 'https://www.ncbi.nlm.nih.gov/clinvar/' %}
+                                        {% if id_type == 'Condition Count' %}
+                                           <li>{{ id }} conditions reported</li>
+                                        {% else %}
+                                           {% if id_type == 'MedGen' %}
+                                              {% set url = url ~ '?term=' ~ id ~ '[cui]' %}
+                                           {% elif id_type == 'OMIM' %}
+                                              {% set url = url ~ '?term=' ~ id ~ '[mim]' %}
+                                           {% elif id_type == 'Orphanet' %}
+                                              {% set url = url ~ '?term=' ~ id ~ '[orpha]' %}
+                                           <!-- add more conditions here based on possible ID types -->
+                                           {% endif %}
+                                           <li><a href="{{ url }}">{{ id_type }}: {{ id }}</a></li>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
         {% endfor %}
-    </ul>
-    {% endfor %}
-    <img src="{{ image_url }}" alt="Clinical Significance Distribution">
+        <!-- Embed the pie chart image -->
+        <img src="{{ image_url }}" alt="Clinical Significance Distribution" class="my-4">
+    </div>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 </body>
 </html>
