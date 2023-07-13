@@ -3,7 +3,7 @@ from collections import defaultdict
 from app.services.file_reader import read_and_validate_data
 from app.utils.ensemblutils import EnsemblAPI, DataProcessor
 from app.utils.ncbiutils import ApiClient
-from app.services.dao import VariantDAO
+from app.models.dao import VariantDAO
 from app.services.data_visualizer import DataVisualizer
 from app.services.summary_generator import SummaryGenerator
 from app.services.pdf_generator import PDFGenerator
