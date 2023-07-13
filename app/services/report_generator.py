@@ -9,6 +9,12 @@ from app.services.summary_generator import SummaryGenerator
 from app.services.pdf_generator import PDFGenerator
 from collections import Counter
 from flask import current_app
+import logging
+
+logging.basicConfig(filename='app.log', level=logging.ERROR,
+                    format='%(asctime)s %(levelname)s %(name)s %(message)s')
+logger=logging.getLogger(__name__)
+
 
 class DNAReportGenerator:
     def __init__(self, connection_string):
