@@ -10,3 +10,4 @@ bio==1.25.0
 aredis==1.1.8
 requests==2.31.0
 langchain==0.0.223
+flask-sqlalchemy==3.0.5
