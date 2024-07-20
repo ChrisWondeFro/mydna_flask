@@ -22,10 +22,29 @@ Upload your AncestryDNA.txt file and get detailed variant summary data from NCBI
 - Copy the `.env.example` file to `.env`
 - Fill in the PostgreSQL database connection details and Firebase credentials in the `.env` file:
   ```
-  DATABASE_URL=postgresql://username:password@localhost/dbname
-  FIREBASE_API_KEY=your_firebase_api_key
-  FIREBASE_AUTH_DOMAIN=your_firebase_auth_domain
-  FIREBASE_PROJECT_ID=your_firebase_project_id
+  POSTGRES_URL=
+  POSTGRES_USER=
+  POSTGRES_PW=
+  POSTGRES_DB="variant_summary"  
+  
+  FIREBASE_TYPE=
+  FIREBASE_PROJECT_ID=
+  FIREBASE_PRIVATE_KEY_ID=
+  FIREBASE_PRIVATE_KEY=
+  FIREBASE_CLIENT_EMAIL=
+  FIREBASE_CLIENT_ID=
+  FIREBASE_AUTH_URI=
+  FIREBASE_TOKEN_URI=
+  FIREBASE_AUTH_PROVIDER_X509_CERT_URL=
+  FIREBASE_CLIENT_X509_CERT_URL=
+  FIREBASE_UNIVERSE_DOMAIN=
+
+  FIREBASE_AUTH_DOMAIN=
+  FIREBASE_PROJECT_ID=
+  FIREBASE_STORAGE_BUCKET=
+  FIREBASE_MESSAGING_SENDER_ID=
+  FIREBASE_APP_ID=
+
   ```
 5. Run the scripts in  app/models/variant_summary_process_and_upload folder, 
    first create_table.py then process_upload.py, this is the core of this application.
