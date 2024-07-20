@@ -6,7 +6,7 @@ from app.utils.ncbiutils import ApiClient
 from app.models.dao import VariantDAO
 from app.services.data_visualizer import DataVisualizer
 from app.services.summary_generator import SummaryGenerator
-from app.services.pdf_generator import PDFGenerator
+#from app.services.pdf_generator import PDFGenerator
 from collections import Counter
 from flask import current_app
 import logging
@@ -21,7 +21,7 @@ class DNAReportGenerator:
         self.variant_dao = VariantDAO(connection_string)
         self.data_visualizer = DataVisualizer()
         self.summary_generator = SummaryGenerator()
-        self.pdf_generator = PDFGenerator()
+        #self.pdf_generator = PDFGenerator()
 
     def parse_phenotype_ids(self, variant_info):
         for variant in variant_info:
@@ -54,6 +54,6 @@ class DNAReportGenerator:
         clinical_significance_counts = Counter([variant['clinicalsignificance'] for variant in variant_info])
         organized_data = self.organize_data(variant_info)
         summary_html = self.summary_generator.generate_summary(organized_data, clinical_significance_counts, image_url)
-        self.pdf_generator.write_report(summary_html)  
+        #self.pdf_generator.write_report(summary_html)  
         clinical_significance_counts = Counter([variant['clinicalsignificance'] for variant in variant_info])
         return summary_html, clinical_significance_counts      

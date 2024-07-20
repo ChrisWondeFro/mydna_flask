@@ -3,6 +3,11 @@
 *.DS_Store
 .DS_Store
 tree.txt
+scripts.js
+.png
+*.png
+.svg
+*.svg
 
 ### Python template
 # Byte-compiled / optimized / DLL files
