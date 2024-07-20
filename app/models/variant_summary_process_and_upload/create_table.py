@@ -1,10 +1,8 @@
 import psycopg2
 from dotenv import load_dotenv 
-from config import Config
 import os
 
 load_dotenv()
-config = Config()
 
 connection = psycopg2.connect(
     database=os.getenv("POSTGRES_DB"),
