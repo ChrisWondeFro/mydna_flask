@@ -1,5 +1,5 @@
 # Mydna Flask Application
-Upload your AncestryDNA.txt file and get detailed variant summary data from NCBI database.
+Flask application to allow users to upload their AncestryDNA.txt file and get detailed variant summary data from NCBI database. Incorporates Google Sign-in.
 
 ## Prerequisites
 
