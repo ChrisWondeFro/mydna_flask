@@ -20,30 +20,12 @@ Flask application to allow users to upload their AncestryDNA.txt file and get de
 
 4. Set up the environment variables:
 - Copy the `.env.example` file to `.env`
-- Fill in the PostgreSQL database connection details and Firebase credentials in the `.env` file:
+- Fill in the PostgreSQL database connection details in the `.env` file:
   ```
   POSTGRES_URL=
   POSTGRES_USER=
   POSTGRES_PW=
   POSTGRES_DB="variant_summary"  
-  
-  FIREBASE_TYPE=
-  FIREBASE_PROJECT_ID=
-  FIREBASE_PRIVATE_KEY_ID=
-  FIREBASE_PRIVATE_KEY=
-  FIREBASE_CLIENT_EMAIL=
-  FIREBASE_CLIENT_ID=
-  FIREBASE_AUTH_URI=
-  FIREBASE_TOKEN_URI=
-  FIREBASE_AUTH_PROVIDER_X509_CERT_URL=
-  FIREBASE_CLIENT_X509_CERT_URL=
-  FIREBASE_UNIVERSE_DOMAIN=
-
-  FIREBASE_AUTH_DOMAIN=
-  FIREBASE_PROJECT_ID=
-  FIREBASE_STORAGE_BUCKET=
-  FIREBASE_MESSAGING_SENDER_ID=
-  FIREBASE_APP_ID=
 
   ```
 5. Run the scripts in  app/models/variant_summary_process_and_upload folder, 
