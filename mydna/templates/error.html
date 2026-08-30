@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} &middot; MyDNA{% endblock %}
+
+{% block content %}
+<div class="panel error-panel stack" role="alert">
+  <h1>{{ title }}</h1>
+  {% if message %}<p>{{ message }}</p>{% endif %}
+  {% if hint %}<p class="text-muted">{{ hint }}</p>{% endif %}
+  <p class="text-muted">
+    Nothing from your file was saved. It is safe to try again.
+  </p>
+  <p>
+    <a class="button" href="{{ url_for('dna.index') }}">Back to the start</a>
+  </p>
+</div>
+{% endblock %}

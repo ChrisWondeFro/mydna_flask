@@ -1,0 +1,39 @@
+.git
+.gitignore
+.github
+
+# Never bake secrets into an image
+.env
+.env.local
+*.pem
+*-service-account*.json
+
+# Never bake genomic data into an image
+*.vcf
+*.vcf.gz
+AncestryDNA*.txt
+23andMe*.txt
+
+# Build/dev artifacts
+venv
+.venv
+__pycache__
+*.py[cod]
+.pytest_cache
+.ruff_cache
+.mypy_cache
+*.egg-info
+build
+dist
+htmlcov
+.coverage
+
+# Generated index (mount it at runtime instead)
+/data
+*.sqlite
+*.sqlite3
+*.db
+
+# OS noise
+.DS_Store
+*.log

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>{% block title %}MyDNA{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/mydna.css') }}">
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="page">
+      <a class="wordmark" href="{{ url_for('dna.index') }}">
+        {% include "partials/mark.svg" %}
+        MyDNA
+      </a>
+      <span class="header-note">Runs locally &middot; nothing is uploaded or stored</span>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="page">
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="page">
+      <p>
+        <strong>Not medical advice.</strong> MyDNA reports what the public ClinVar
+        archive already records about variants found in your file. It is not a
+        diagnosis and not a risk prediction. Consumer genotyping arrays produce
+        false positives. Discuss any concerns with a qualified clinician or
+        genetic counsellor.
+      </p>
+      <p>
+        Variant classifications from
+        <a href="https://www.ncbi.nlm.nih.gov/clinvar/" rel="noopener noreferrer" target="_blank">ClinVar</a>,
+        maintained by NCBI, U.S. National Library of Medicine.
+        Landrum MJ, et al. <em>ClinVar: improving access to variant interpretations
+        and supporting evidence.</em> Nucleic Acids Research. 2018;46(D1):D1062&ndash;D1067.
+        {%- if index_metadata and index_metadata.get('clinvar_last_modified') %}
+        Local index built from the release dated {{ index_metadata['clinvar_last_modified'] }}.
+        {%- endif %}
+      </p>
+      <p>MyDNA is free software, released under the MIT licence.</p>
+    </div>
+  </footer>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

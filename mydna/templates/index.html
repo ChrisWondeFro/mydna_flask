@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}MyDNA &middot; Look up your variants in ClinVar{% endblock %}
+
+{% block content %}
+<div class="hero">
+  <h1>Look up your DNA variants in ClinVar</h1>
+  <p class="lede">
+    Upload a raw data export from AncestryDNA or 23andMe. MyDNA matches the
+    variant identifiers in your file against a local copy of ClinVar and shows
+    you what the archive already records about them.
+  </p>
+</div>
+
+{% if not index_ready %}
+  <div class="panel stack" role="alert">
+    <h2>The ClinVar index has not been built yet</h2>
+    <p>
+      MyDNA needs a local copy of the ClinVar variant summary before it can
+      analyse anything. Build it once with:
+    </p>
+    <p><code>mydna index build</code></p>
+    <p class="text-muted">
+      This downloads roughly 440&nbsp;MB from NCBI and takes a few minutes. The
+      download is public reference data and contains nothing about you.
+    </p>
+  </div>
+{% else %}
+  {% if index_rows and index_rows < 1000 %}
+    <div class="panel stack" role="status" style="margin-bottom: 1.5rem; border-left: 3px solid var(--risk-factor);">
+      <h2>This index looks like a test fixture</h2>
+      <p>
+        It only contains {{ "{:,}".format(index_rows) }} records. A real ClinVar
+        index has well over a million. Uploads will parse, but almost nothing
+        will match &mdash; including variants you planted on purpose.
+      </p>
+      <p><code>mydna index build --source data/variant_summary.txt</code></p>
+    </div>
+  {% endif %}
+  <div class="panel">
+    <form method="post"
+          action="{{ url_for('dna.analyze') }}"
+          enctype="multipart/form-data"
+          data-upload-form>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <div class="field">
+        <span class="field-label" id="file-label">Your raw DNA data file</span>
+        <span class="field-hint" id="file-hint">
+          Accepts .txt, .csv, .tsv, or .xlsx, up to {{ max_upload_mb }}&nbsp;MB.
+          Use the file exactly as downloaded from your testing service.
+        </span>
+
+        <label class="file-drop" data-file-drop>
+          <input type="file"
+                 name="dna_file"
+                 accept=".txt,.csv,.tsv,.xlsx"
+                 required
+                 aria-labelledby="file-label"
+                 aria-describedby="file-hint"
+                 data-file-input>
+          <span class="file-drop-primary" data-file-name>Choose a file or drag it here</span>
+          <span class="file-drop-secondary" data-file-size>No file selected</span>
+        </label>
+      </div>
+
+      <div class="button-row">
+        <button type="submit" class="button" data-submit-button>
+          <span class="spinner" aria-hidden="true"></span>
+          <span class="button-label-idle">Analyse my data</span>
+          <span class="button-label-busy">Analysing&hellip;</span>
+        </button>
+      </div>
+
+      <p class="progress-note" role="status">
+        Matching your variants against ClinVar. A full export contains hundreds
+        of thousands of markers, so this usually takes under a minute. Please
+        keep this tab open.
+      </p>
+    </form>
+    {% if index_rows %}
+      <p class="text-muted" style="margin: 1rem 0 0;">
+        Local index: {{ "{:,}".format(index_rows) }} GRCh38 ClinVar records
+        {%- if index_metadata.get('clinvar_last_modified') and index_metadata['clinvar_last_modified'] != 'unknown' %}
+          &middot; {{ index_metadata['clinvar_last_modified'] }}
+        {%- endif %}.
+      </p>
+    {% endif %}
+  </div>
+
+  <div class="stack" style="margin-top: 1.5rem;">
+    <section class="assurance">
+      <h2>What happens to your file</h2>
+      <ul>
+        <li>It is read directly from the request and parsed in memory. It is never written to disk.</li>
+        <li>Only the variant identifiers are kept. Your genotype calls are discarded immediately.</li>
+        <li>Nothing leaves this machine. The lookup runs against the local index, and this page loads no third-party resources.</li>
+        <li>Your report is held in memory so you can download the PDF, then discarded when you clear it or restart the app.</li>
+      </ul>
+    </section>
+
+    <section class="disclaimer">
+      <p>
+        <strong>This is not a medical test.</strong> A ClinVar entry means the
+        archive holds a submitted interpretation for a variant &mdash; not that you
+        have, or will develop, any condition. Consumer genotyping arrays are
+        prone to false positives at rare variants in particular. Nothing here
+        should change a medical decision without confirmation from a clinician
+        or genetic counsellor.
+      </p>
+    </section>
+  </div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/upload.js') }}" defer></script>
+{% endblock %}

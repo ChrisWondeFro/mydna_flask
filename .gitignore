@@ -1,13 +1,39 @@
-
+### Secrets - never commit
 .env
+.env.local
+*.pem
+*-service-account*.json
+
+# Real-shaped local dumps used for manual checks. Never commit these.
+test-data/
+mydna/static/_preview.html
+
+### User genomic data - never commit, under any circumstances.
+### A backstop against accidentally adding a real export, not a substitute for
+### care. See CONTRIBUTING.md.
+*.vcf
+*.vcf.gz
+AncestryDNA*.txt
+genome_*.txt
+23andMe*.txt
+
+### ...except the synthetic fixtures the test suite needs. Everything under
+### tests/fixtures/ is invented data and belongs to no person.
+!tests/fixtures/
+!tests/fixtures/**
+
+### Generated data artifacts
+*.sqlite
+*.sqlite3
+*.db
+/data/
+downloaded_variant_summary*
+variant_summary.txt*
+
+### OS noise
 *.DS_Store
 .DS_Store
 tree.txt
-scripts.js
-.png
-*.png
-.svg
-*.svg
 
 ### Python template
 # Byte-compiled / optimized / DLL files
@@ -285,3 +311,4 @@ dump.rdb
 ### Project template
 
 .pytest_cache/
+.ruff_cache/

@@ -1,0 +1,242 @@
+{% extends "base.html" %}
+
+{% block title %}Your variant report &middot; MyDNA{% endblock %}
+
+{% block content %}
+<div class="hero">
+  <h1>Your variant report</h1>
+  <p class="lede">
+    {{ "{:,}".format(report.matched_rsids) }} of the
+    {{ "{:,}".format(report.rsids_submitted) }} variant identifiers in your file
+    appear in ClinVar, matching
+    {{ "{:,}".format(report.matched_records) }} archived records.
+  </p>
+</div>
+
+<section class="disclaimer" style="margin-bottom: 1.5rem;">
+  <p>
+    <strong>Read this before interpreting anything below.</strong> These are
+    ClinVar's own submitted classifications for variants present in your file.
+    They are not a diagnosis, not personalised risk, and not confirmation that
+    you carry a variant &mdash; consumer arrays misreport rare variants
+    relatively often. Most people carry many variants classified as pathogenic
+    for recessive conditions they will never develop. Take anything concerning
+    to a clinician or genetic counsellor for proper testing.
+  </p>
+</section>
+
+<h2 class="visually-hidden">Summary</h2>
+<div class="stat-grid">
+  <div class="stat">
+    <span class="stat-value numeric">{{ "{:,}".format(report.parse.total_rows) }}</span>
+    <span class="stat-label">Rows read from your file</span>
+  </div>
+  <div class="stat">
+    <span class="stat-value numeric">{{ "{:,}".format(report.rsids_submitted) }}</span>
+    <span class="stat-label">Unique dbSNP identifiers</span>
+  </div>
+  <div class="stat">
+    <span class="stat-value numeric">{{ "{:,}".format(report.matched_rsids) }}</span>
+    <span class="stat-label">Found in ClinVar</span>
+  </div>
+  <div class="stat stat-notable">
+    <span class="stat-value numeric">{{ "{:,}".format(report.notable_count) }}</span>
+    <span class="stat-label">Records classified pathogenic or likely pathogenic</span>
+  </div>
+</div>
+
+{% if report.parse.skipped_internal or report.parse.skipped_unreadable %}
+  <p class="filter-status">
+    {% if report.parse.skipped_internal %}
+      Skipped {{ "{:,}".format(report.parse.skipped_internal) }} internal probe
+      {{ "identifier" if report.parse.skipped_internal == 1 else "identifiers" }}.
+      These are specific to your testing service and are not dbSNP variants.
+    {% endif %}
+    {% if report.parse.skipped_unreadable %}
+      Skipped {{ "{:,}".format(report.parse.skipped_unreadable) }}
+      {{ "row" if report.parse.skipped_unreadable == 1 else "rows" }}
+      whose identifier could not be read.
+    {% endif %}
+  </p>
+{% endif %}
+
+{% if report.chart_data_uri %}
+  <figure class="chart-figure" style="margin-top: 1.5rem;">
+    <img src="{{ report.chart_data_uri }}"
+         alt="Horizontal bar chart of matched ClinVar records by classification.
+              {% for group in report.groups %}{{ group.label }}: {{ group.count }} records.{% endfor %}">
+    <figcaption>
+      Counts are of ClinVar <em>records</em>, not of your variants. One variant
+      can hold several records from different submitters.
+    </figcaption>
+  </figure>
+{% endif %}
+
+<div class="button-row" style="margin-top: 1.5rem;">
+  <a class="button" href="{{ url_for('dna.report_pdf') }}">Download PDF</a>
+  <form method="post" action="{{ url_for('dna.clear') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button type="submit" class="button button-secondary">Clear this report</button>
+  </form>
+</div>
+
+<section class="findings" aria-labelledby="findings-heading">
+  <h2 id="findings-heading">Findings by classification</h2>
+  <p class="findings-hint">
+    Three steps: open a classification, then a variant type, then a record.
+    Long lists are paginated so the page stays usable.
+  </p>
+
+  <div class="filter-bar" data-report-filter>
+    <div class="filter-field">
+      <label for="variant-search">Search by rsID, gene, or condition</label>
+      <input type="search"
+             id="variant-search"
+             placeholder="e.g. rs334, BRCA1, or haemochromatosis"
+             autocomplete="off"
+             data-search-input>
+    </div>
+    <div class="filter-field filter-field-narrow">
+      <label for="star-filter">Minimum review confidence</label>
+      <select id="star-filter" data-star-filter>
+        <option value="0">Any</option>
+        <option value="1">&#9733; 1 star and above</option>
+        <option value="2">&#9733;&#9733; 2 stars and above</option>
+        <option value="3">&#9733;&#9733;&#9733; 3 stars and above</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="tree-toolbar">
+    <button type="button" class="button button-secondary button-small" data-expand-groups>
+      Expand classifications
+    </button>
+    <button type="button" class="button button-secondary button-small" data-collapse-all>
+      Collapse all
+    </button>
+  </div>
+  <p class="filter-status" role="status" data-filter-status></p>
+
+  <div class="findings-tree">
+    {% for group in report.groups %}
+      <details class="group"
+               data-bucket="{{ group.bucket }}"
+               data-group
+               data-total="{{ group.count }}"
+               {% if group.rank == 0 %}open{% endif %}>
+        <summary class="group-header">
+          <span class="group-title">{{ group.label }}</span>
+          <span class="group-count numeric" data-group-count>{{ "{:,}".format(group.count) }} records</span>
+        </summary>
+
+        {% for type_group in group.types %}
+          <details class="type-block" data-type-block data-total="{{ type_group.count }}">
+            <summary class="type-summary">
+              <span class="type-summary-label">{{ type_group.label }}</span>
+              <span class="type-summary-count numeric" data-type-count>
+                {{ "{:,}".format(type_group.count) }}
+              </span>
+            </summary>
+
+            <ul class="variant-list" data-variant-list>
+              {% for variant in type_group.variants %}
+                <li class="variant"
+                    data-variant
+                    data-stars="{{ variant.review_stars }}"
+                    data-haystack="{{ variant.rsid_label }} {{ variant.gene_symbol or '' }} {{ variant.conditions|join(' ') }}">
+                  <details data-variant-details>
+                    <summary class="variant-summary">
+                      <span class="variant-rsid">{{ variant.rsid_label }}</span>
+                      {% if variant.gene_symbol %}
+                        <span class="variant-gene">{{ variant.gene_symbol }}</span>
+                      {% endif %}
+                      <span class="stars"
+                            title="ClinVar review status: {{ variant.review_status or 'not provided' }}">
+                        <span aria-hidden="true">{{ '★' * variant.review_stars }}{{ '☆' * (4 - variant.review_stars) }}</span>
+                        <span class="visually-hidden">{{ variant.review_stars }} of 4 review stars</span>
+                      </span>
+                      <span class="variant-preview">
+                        {%- if variant.conditions -%}
+                          {{ variant.conditions[0] }}
+                        {%- else -%}
+                          No condition listed
+                        {%- endif -%}
+                      </span>
+                    </summary>
+
+                    <div class="variant-body">
+                      <p class="variant-conditions">
+                        {%- if variant.conditions -%}
+                          {{ variant.conditions|join('; ') }}
+                        {%- else -%}
+                          <span class="text-muted">No condition listed</span>
+                        {%- endif -%}
+                      </p>
+
+                      <dl class="variant-meta">
+                        {% if variant.clinical_significance %}
+                          <div><dt>ClinVar says</dt><dd>{{ variant.clinical_significance }}</dd></div>
+                        {% endif %}
+                        {% if variant.last_evaluated %}
+                          <div><dt>Last evaluated</dt><dd>{{ variant.last_evaluated }}</dd></div>
+                        {% endif %}
+                        {% if variant.number_submitters %}
+                          <div><dt>Submitters</dt><dd class="numeric">{{ variant.number_submitters }}</dd></div>
+                        {% endif %}
+                      </dl>
+
+                      <ul class="link-list">
+                        <li>
+                          <a href="{{ variant.dbsnp_url }}" rel="noopener noreferrer" target="_blank">dbSNP</a>
+                        </li>
+                        <li>
+                          <a href="{{ variant.clinvar_url }}" rel="noopener noreferrer" target="_blank">ClinVar</a>
+                        </li>
+                        {% for phenotype in variant.phenotypes %}
+                          {% if phenotype.url %}
+                            <li>
+                              <a href="{{ phenotype.url }}" rel="noopener noreferrer" target="_blank">
+                                {{ phenotype.source }}: {{ phenotype.identifier }}
+                              </a>
+                            </li>
+                          {% endif %}
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  </details>
+                </li>
+              {% endfor %}
+            </ul>
+
+            <p class="empty-note" hidden data-empty-note>No variants here match your filters.</p>
+
+            <div class="pager" hidden data-pager>
+              <div class="pager-buttons">
+                <button type="button" data-page-first>First</button>
+                <button type="button" data-page-prev>Previous</button>
+                <button type="button" data-page-next>Next</button>
+                <button type="button" data-page-last>Last</button>
+              </div>
+              <p class="pager-status" data-page-status></p>
+            </div>
+          </details>
+        {% endfor %}
+      </details>
+    {% else %}
+      <div class="panel">
+        <h3>No matches found</h3>
+        <p>
+          None of the variant identifiers in your file appear in the local ClinVar
+          index. That is a normal outcome, and it is not a clean bill of health:
+          ClinVar only holds variants that someone has submitted an interpretation
+          for.
+        </p>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/report.js') }}" defer></script>
+{% endblock %}
